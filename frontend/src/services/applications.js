@@ -19,7 +19,7 @@ export const JOB_TYPES = [
 
 export async function listApplications(filters = {}) {
   if (DEMO_MODE) return demoStore.list(filters);
-  const { data } = await api.get("/applications", { params: filters });
+  const { data } = await api.get("/api/applications", { params: filters });
   return data;
 }
 
@@ -27,29 +27,29 @@ export const getApplications = listApplications;
 
 export async function getApplication(id) {
   if (DEMO_MODE) return demoStore.get(id);
-  const { data } = await api.get(`/applications/${id}`);
+  const { data } = await api.get(`/api/applications/${id}`);
   return data;
 }
 
 export async function createApplication(payload) {
   if (DEMO_MODE) return demoStore.create(payload);
-  const { data } = await api.post("/applications", payload);
+  const { data } = await api.post("/api/applications", payload);
   return data;
 }
 
 export async function updateApplication(id, payload) {
   if (DEMO_MODE) return demoStore.update(id, payload);
-  const { data } = await api.put(`/applications/${id}`, payload);
+  const { data } = await api.put(`/api/applications/${id}`, payload);
   return data;
 }
 
 export async function deleteApplication(id) {
   if (DEMO_MODE) return demoStore.remove(id);
-  await api.delete(`/applications/${id}`);
+  await api.delete(`/api/applications/${id}`);
 }
 
 export async function getStats() {
   if (DEMO_MODE) return demoStore.stats();
-  const { data } = await api.get("/dashboard/stats");
+  const { data } = await api.get("/api/dashboard/stats");
   return data;
 }
