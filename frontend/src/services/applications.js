@@ -53,3 +53,35 @@ export async function getStats() {
   const { data } = await api.get("/api/dashboard/stats");
   return data;
 }
+
+export async function exportCSV() {
+  if (DEMO_MODE) return demoStore.exportCSV();
+  const response = await api.get("/api/applications/export/csv", { responseType: "blob" });
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "job_applications_export.csv");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+export async function exportCalendar() {
+  if (DEMO_MODE) return demoStore.exportCalendar();
+  const response = await api.get("/api/applications/export/calendar", { responseType: "blob" });
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "interview_schedule.ics");
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+export async function uploadResume(id, file) {
+  if (DEMO_MODE) return demoStore.uploadResume(id, file);
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data } = await api.post(`/api/applications/${id}/resume`, formData);
+  return data;
+}

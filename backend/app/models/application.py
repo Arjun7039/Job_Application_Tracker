@@ -31,6 +31,8 @@ class Application(Base):
     status = Column(SQLEnum(StatusEnum), default=StatusEnum.applied, nullable=False)
     job_url = Column(String, nullable=True)
     notes = Column(Text, nullable=True)
+    interview_date = Column(DateTime, nullable=True)
+    resume_filename = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

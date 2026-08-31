@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { X, Sparkles, Save } from "lucide-react";
+import { X, Sparkles, Save, Paperclip, FileText, Calendar } from "lucide-react";
 import CompanyMark from "./CompanyMark";
+import { uploadResume } from "../services/applications";
 
 const JOB_TYPES = [
   { value: "full_time", label: "Full-time" },
@@ -27,6 +28,9 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
   const [jobUrl, setJobUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [appDate, setAppDate] = useState(new Date().toISOString().split("T")[0]);
+  const [interviewDate, setInterviewDate] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
+  const [resumeFilename, setResumeFilename] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -43,6 +47,13 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
           ? new Date(initialData.application_date).toISOString().split("T")[0]
           : new Date().toISOString().split("T")[0]
       );
+      setInterviewDate(
+        initialData.interview_date
+          ? new Date(initialData.interview_date).toISOString().slice(0, 16)
+          : ""
+      );
+      setResumeFilename(initialData.resume_filename || "");
+      setResumeFile(null);
     } else {
       setCompany("");
       setPosition("");
@@ -52,6 +63,9 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
       setJobUrl("");
       setNotes("");
       setAppDate(new Date().toISOString().split("T")[0]);
+      setInterviewDate("");
+      setResumeFilename("");
+      setResumeFile(null);
     }
   }, [initialData, open]);
 
@@ -63,7 +77,7 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
 
     setSubmitting(true);
     try {
-      await onSubmit({
+      const savedApp = await onSubmit({
         company: company.trim(),
         position: position.trim(),
         location: location.trim() || null,
@@ -72,7 +86,13 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
         job_url: jobUrl.trim() || null,
         notes: notes.trim() || null,
         application_date: appDate,
+        interview_date: interviewDate ? new Date(interviewDate).toISOString() : null,
       });
+
+      const targetId = savedApp?.id || initialData?.id;
+      if (targetId && resumeFile) {
+        await uploadResume(targetId, resumeFile);
+      }
       onClose();
     } catch (err) {
       console.error(err);
@@ -184,6 +204,38 @@ export default function ApplicationPanel({ open, onClose, onSubmit, initialData 
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="field-label">Scheduled Interview / Event Date</label>
+              <input
+                type="datetime-local"
+                value={interviewDate}
+                onChange={(e) => setInterviewDate(e.target.value)}
+                className="field"
+              />
+            </div>
+
+            <div>
+              <label className="field-label">Resume Attachment (PDF / DOCX)</label>
+              <label className="field cursor-pointer flex items-center justify-between hover:border-indigo-500/50">
+                <span className="truncate text-slate-300 text-xs font-semibold">
+                  {resumeFile ? resumeFile.name : resumeFilename || "Upload Resume File..."}
+                </span>
+                <Paperclip className="size-4 text-indigo-400 shrink-0 ml-2" />
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setResumeFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              </label>
             </div>
           </div>
 

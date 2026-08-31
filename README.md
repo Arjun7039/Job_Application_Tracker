@@ -11,7 +11,9 @@
 - 📊 **Executive Dashboard**: Key metric cards (Total Applications, Applied, Interviews, Assessments, Offers, Rejected) with response rate calculation.
 - 🔍 **Live Search & Filtering**: Debounced search by role or company, with status tabs and job-type filters.
 - 🗂️ **Slide-Over Panel**: Fast inline creation and editing of applications via responsive slide-over drawer.
-- 📅 **Interview Scheduler View**: Dedicated page tracking upcoming interview dates and preparation notes.
+- 📅 **Interview & Assessment Calendar Sync**: Schedule interview dates and export standard `.ics` calendar files for Google, Apple, and Outlook calendars.
+- 📎 **Resume File Attachments**: Upload and attach custom PDF/DOCX resumes per job application.
+- 📥 **Instant CSV Export**: Download your entire job application pipeline in standard `.csv` spreadsheet format for offline reporting.
 - ⚡ **Dual Engine / Demo Mode**: Works seamlessly connected to the FastAPI REST backend or as a standalone app using browser `localStorage`.
 - ☁️ **Cloud Deployment Ready**: Ready for Vercel (Frontend) and Render (Backend + Supabase PostgreSQL).
 

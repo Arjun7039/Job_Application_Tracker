@@ -2,7 +2,7 @@
 .env
 *.env
 !.env.example
-
+JOB_tracksimple.md
 # Python
 __pycache__/
 *.py[cod]
@@ -12,6 +12,7 @@ venv/
 jobtrack.db
 test.db
 *.db
+uploads/
 
 # Node / Frontend
 node_modules/

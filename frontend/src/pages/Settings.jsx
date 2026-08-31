@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import { User, Shield, Server, Database, Sparkles, CheckCircle2 } from "lucide-react";
+import { exportCSV, exportCalendar } from "../services/applications";
+import { User, Shield, Server, Database, Sparkles, CheckCircle2, Download, Calendar } from "lucide-react";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -36,6 +37,43 @@ export default function Settings() {
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</span>
               <p className="text-base font-bold text-white">{user?.email || "N/A"}</p>
             </div>
+          </div>
+        </div>
+
+        {/* Data Backup & Export Shortcuts */}
+        <div className="panel p-6 space-y-5">
+          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+            <div className="size-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 grid place-items-center text-emerald-400">
+              <Download className="size-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white">Data Export & Backup</h2>
+              <p className="text-xs text-slate-400">Download offline backups or sync interview schedules to calendar apps.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button
+              onClick={exportCSV}
+              className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 text-left transition-colors flex items-center justify-between group"
+            >
+              <div>
+                <p className="text-sm font-bold text-white group-hover:text-emerald-300">Export Application Records (.csv)</p>
+                <p className="text-xs text-slate-400 mt-0.5">Compatible with Excel, Google Sheets, & Numbers</p>
+              </div>
+              <Download className="size-5 text-emerald-400 shrink-0 ml-3" />
+            </button>
+
+            <button
+              onClick={exportCalendar}
+              className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-indigo-500/40 text-left transition-colors flex items-center justify-between group"
+            >
+              <div>
+                <p className="text-sm font-bold text-white group-hover:text-indigo-300">Sync Interview Calendar (.ics)</p>
+                <p className="text-xs text-slate-400 mt-0.5">Import into Apple Calendar, Google, or Outlook</p>
+              </div>
+              <Calendar className="size-5 text-indigo-400 shrink-0 ml-3" />
+            </button>
           </div>
         </div>
 

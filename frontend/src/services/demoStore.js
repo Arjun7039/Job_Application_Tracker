@@ -223,6 +223,50 @@ export const demoStore = {
       recent: apps.slice(0, 5),
     };
   },
+
+  exportCSV() {
+    const apps = this.list();
+    let csv = "ID,Company,Position,Location,Job Type,Status,Application Date,Interview Date,Job URL,Notes\n";
+    apps.forEach((a) => {
+      csv += `"${a.id}","${a.company}","${a.position}","${a.location || ""}","${a.job_type}","${a.status}","${a.application_date || ""}","${a.interview_date || ""}","${a.job_url || ""}","${(a.notes || "").replace(/"/g, '""')}"\n`;
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "job_applications_export.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  },
+
+  exportCalendar() {
+    const apps = this.list().filter((a) => a.status === "interview" || a.status === "assessment");
+    let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//JobTrack//Demo Calendar//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n";
+    apps.forEach((a) => {
+      const dt = a.interview_date ? new Date(a.interview_date) : new Date();
+      const dtStr = dt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      ics += `BEGIN:VEVENT\r\nUID:demo-${a.id}@jobtrack.com\r\nDTSTAMP:${dtStr}\r\nDTSTART:${dtStr}\r\nSUMMARY:Interview / Assessment: ${a.position} at ${a.company}\r\nDESCRIPTION:Company: ${a.company}\\nPosition: ${a.position}\\nNotes: ${a.notes || "N/A"}\r\nLOCATION:${a.location || "Remote"}\r\nSTATUS:CONFIRMED\r\nEND:VEVENT\r\n`;
+    });
+    ics += "END:VCALENDAR";
+    const blob = new Blob([ics], { type: "text/calendar" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "interview_schedule.ics";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  },
+
+  uploadResume(id, file) {
+    const apps = read(APPS_KEY, []);
+    const index = apps.findIndex((a) => Number(a.id) === Number(id) && a.user_id === this.currentUserId());
+    if (index === -1) throw new Error("Application not found");
+    apps[index].resume_filename = file.name;
+    write(APPS_KEY, apps);
+    return apps[index];
+  },
 };
 
 function nameFromEmail(email) {

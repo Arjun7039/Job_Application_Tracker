@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getStats, createApplication } from "../services/applications";
 import { useAuth } from "../context/AuthContext";
 import StatCard from "../components/StatCard";
@@ -125,10 +126,10 @@ export default function Dashboard() {
                 {stats?.recent?.length || 0}
               </span>
             </h2>
-            <a href="/applications" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+            <Link to="/applications" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
               <span>View All</span>
               <ArrowRight className="size-4" />
-            </a>
+            </Link>
           </div>
 
           <div className="panel divide-y divide-slate-800/80 overflow-hidden">

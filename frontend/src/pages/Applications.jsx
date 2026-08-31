@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getApplications, createApplication, updateApplication, deleteApplication } from "../services/applications";
+import { getApplications, createApplication, updateApplication, deleteApplication, exportCSV } from "../services/applications";
 import StatusPill, { STATUS_LABELS } from "../components/StatusPill";
 import CompanyMark from "../components/CompanyMark";
 import ApplicationPanel from "../components/ApplicationPanel";
@@ -13,6 +13,8 @@ import {
   Briefcase, 
   MapPin, 
   Calendar,
+  Download,
+  Paperclip,
   X
 } from "lucide-react";
 
@@ -86,10 +88,16 @@ export default function Applications() {
           <p className="text-base text-slate-400 mt-1">Manage and track your active job search applications.</p>
         </div>
 
-        <button onClick={openCreate} className="btn-primary py-3 px-6 text-base shadow-xl shadow-indigo-500/25 shrink-0">
-          <Plus className="size-5" />
-          <span>Add Application</span>
-        </button>
+        <div className="flex items-center gap-3 shrink-0">
+          <button onClick={exportCSV} className="btn-secondary py-3 px-5 text-base shrink-0">
+            <Download className="size-5 text-emerald-400" />
+            <span>Export CSV</span>
+          </button>
+          <button onClick={openCreate} className="btn-primary py-3 px-6 text-base shadow-xl shadow-indigo-500/25 shrink-0">
+            <Plus className="size-5" />
+            <span>Add Application</span>
+          </button>
+        </div>
       </div>
 
       {/* Search & Filters Toolbar */}
@@ -203,6 +211,12 @@ export default function Applications() {
                       <Calendar className="size-4 text-slate-500" />
                       Applied: {app.application_date ? new Date(app.application_date).toLocaleDateString() : "N/A"}
                     </span>
+                    {app.resume_filename && (
+                      <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                        <Paperclip className="size-3.5" />
+                        <span>Resume Attached</span>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

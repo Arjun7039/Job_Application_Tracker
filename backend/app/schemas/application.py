@@ -12,6 +12,8 @@ class ApplicationBase(BaseModel):
     status: Optional[StatusEnum] = StatusEnum.applied
     job_url: Optional[str] = None
     notes: Optional[str] = None
+    interview_date: Optional[datetime] = None
+    resume_filename: Optional[str] = None
 
 class ApplicationCreate(ApplicationBase):
     pass
@@ -25,6 +27,8 @@ class ApplicationUpdate(BaseModel):
     status: Optional[StatusEnum] = None
     job_url: Optional[str] = None
     notes: Optional[str] = None
+    interview_date: Optional[datetime] = None
+    resume_filename: Optional[str] = None
 
 class ApplicationOut(ApplicationBase):
     id: int

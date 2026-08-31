@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from app.core.config import settings
 from app.db.engine import engine
 from app.db.base import Base
@@ -13,6 +15,11 @@ app = FastAPI(
     description="Full-stack Job Application Tracker REST API",
     version="1.0.0"
 )
+
+# Ensure uploads directory exists and mount static files
+upload_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+os.makedirs(upload_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
 
 # Configure production-ready CORS middleware
 raw_origins = [o.strip() for o in settings.FRONTEND_URL.split(",") if o.strip()]
